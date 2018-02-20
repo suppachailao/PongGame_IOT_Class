@@ -1,3 +1,7 @@
+/* PongGame
+    Suppachai
+    IOT_Class by Ajahn Piti,
+*/
 #include "PongGame.h"
 #include "LEDMatrix.h"
 #include "HC595.h"
@@ -37,16 +41,15 @@ void setup(){
 }
 
 void processInput(unsigned long tick){ //You will need to change this
-  // if (checkAllLow() == LOW){
     
     if ((digitalRead(leftUpBut)==LOW)){
       pongGame.movePad(Player::PLAYER_TWO, PadDirection::UP);
-      Serial.println("Now");
-    
+      delay(50);
       
     }
     else if ((digitalRead(leftDownBut)==LOW)){
       pongGame.movePad(Player::PLAYER_TWO, PadDirection::DOWN);
+      delay(50);
     }
     else if ((digitalRead(resetBut)==LOW)){
       pongGame.reset();
@@ -55,10 +58,11 @@ void processInput(unsigned long tick){ //You will need to change this
     }
     else if ((digitalRead(rightUpBut)==LOW)){
       pongGame.movePad(Player::PLAYER_ONE, PadDirection::UP);
-      // Serial.println(digitalRead(rightUpBut));
+      delay(50);
     }
     else if ((digitalRead(rightDownBut)==LOW)){
       pongGame.movePad(Player::PLAYER_ONE, PadDirection::DOWN);
+      delay(50);
     }
   // }
 }
@@ -73,7 +77,6 @@ byte BoolArrayToByte(bool boolArray[8]){
       result = result | (1 << i);
     }
   }
-
   return result;
 }
 
@@ -85,19 +88,21 @@ void drawScreen(int* buffer){
         }
         byte rowByte = BoolArrayToByte(rowArray);
         ledMat.writeRow(irow, rowByte);
-        ledMat.update();
+        // ledMat.update();
     }
 }
+
 void loop(){
     const unsigned long tick = millis();
     processInput(tick);
     pongGame.update(tick);
-    Serial.println("Playing");
+    
 
     if(pongGame.isDirty()){
-      //pain 
       pongGame.paint(buffer);
-      Serial.println("Gaming loop");
       drawScreen(buffer);
-      }
+    }
+    else{
+      drawScreen(buffer);
+    }
  }
